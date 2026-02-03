@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Call Connect</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #6d28d9;
+      --primary-light: #8b5cf6;
+      --primary-dark: #5b21b6;
+      --secondary: #ec4899;
+      --accent: #06b6d4;
+      --danger: #ef4444;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --dark-1: #0f0f23;
+      --dark-2: #1a1a2e;
+      --dark-3: #16213e;
+      --light-1: #f0f9ff;
+      --light-2: #e0f2fe;
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      --transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      --slide-in: slideIn 0.5s ease-out;
+      --pulse: pulse 2s infinite;
+      --float: float 6s ease-in-out infinite;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200px 0; }
+      100% { background-position: 200px 0; }
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, var(--dark-1) 0%, var(--dark-2) 50%, var(--dark-3) 100%);
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--light-1);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(109, 40, 217, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
+      z-index: -1;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      animation: var(--slide-in);
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .logo-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      box-shadow: 0 10px 30px rgba(109, 40, 217, 0.5);
+      animation: var(--float);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .logo-icon::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        to right,
+        transparent 20%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 80%
+      );
+      animation: shimmer 3s infinite;
+    }
+
+    .logo-text h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, var(--primary-light), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 5px;
+      letter-spacing: 1px;
+    }
+
+    .logo-text p {
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 500;
+    }
+
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 24px;
+      border-radius: 14px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+      outline: none;
+      white-space: nowrap;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.7s;
+    }
+
+    .btn:hover::after {
+      left: 100%;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      box-shadow: 0 6px 20px rgba(109, 40, 217, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 12px 25px rgba(109, 40, 217, 0.6);
+    }
+
+    .btn-secondary {
+      background: var(--glass-bg);
+      color: white;
+      border: 1.5px solid var(--glass-border);
+      backdrop-filter: blur(12px);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-3px);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #dc2626, #ef4444);
+      color: white;
+      border: none;
+    }
+
+    .btn-danger:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, var(--success), #34d399);
+      color: white;
+    }
+
+    .btn-icon {
+      width: 50px;
+      height: 50px;
+      padding: 0;
+      border-radius: 12px;
+    }
+
+    .btn.active {
+      background: var(--secondary);
+      box-shadow: 0 0 25px rgba(236, 72, 153, 0.5);
+      animation: var(--pulse);
+    }
+
+    /* Contact List */
+    .list-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+      min-height: 200px;
+    }
+
+    .card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      transition: var(--transition);
+      backdrop-filter: blur(12px);
+      position: relative;
+      overflow: hidden;
+      animation: var(--slide-in);
+      animation-delay: calc(var(--i) * 0.1s);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card:hover {
+      transform: translateY(-8px) scale(1.02);
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: var(--card-shadow);
+    }
+
+    .contact-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .contact-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      box-shadow: 0 6px 15px rgba(109, 40, 217, 0.4);
+    }
+
+    .contact-info {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .contact-name {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 8px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .contact-phone {
+      font-size: 1.1rem;
+      color: var(--accent);
+      font-family: 'Roboto Mono', monospace;
+      letter-spacing: 0.5px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .contact-phone i {
+      color: var(--success);
+      font-size: 0.9rem;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .call-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      text-decoration: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-weight: 600;
+      transition: var(--transition);
+      box-shadow: 0 6px 15px rgba(109, 40, 217, 0.4);
+    }
+
+    .call-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 25px rgba(109, 40, 217, 0.6);
+      letter-spacing: 0.5px;
+    }
+
+    .delete-btn {
+      background: rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
+      border: 1.5px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .delete-btn:hover {
+      background: rgba(239, 68, 68, 0.25);
+      border-color: rgba(239, 68, 68, 0.5);
+      transform: scale(1.05);
+    }
+
+    /* Import Area */
+    .import-area {
+      background: var(--glass-bg);
+      border: 2px dashed var(--glass-border);
+      border-radius: 20px;
+      padding: 50px 30px;
+      text-align: center;
+      transition: var(--transition);
+      backdrop-filter: blur(12px);
+      margin-top: 30px;
+      animation: var(--slide-in);
+    }
+
+    .import-area.drag-over {
+      border-color: var(--primary-light);
+      background: rgba(109, 40, 217, 0.15);
+      transform: scale(1.02);
+    }
+
+    .import-area i {
+      font-size: 3.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 20px;
+      animation: var(--float);
+    }
+
+    .import-area h3 {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .import-area p {
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 25px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .file-types {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.4);
+      margin-top: 15px;
+    }
+
+    /* Stats Badge */
+    .stats-badge {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      backdrop-filter: blur(12px);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+      animation: var(--slide-in);
+    }
+
+    .stats-badge i {
+      color: var(--primary-light);
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+      backdrop-filter: blur(8px);
+    }
+
+    .modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background: linear-gradient(145deg, var(--dark-2), var(--dark-3));
+      border-radius: 24px;
+      padding: 40px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+      transform: translateY(30px) scale(0.95);
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .modal.active .modal-content {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .modal-header h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--primary-light), var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .modal-close {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: rgba(255, 255, 255, 0.7);
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-close:hover {
+      color: white;
+      background: rgba(255, 255, 255, 0.2);
+      transform: rotate(90deg);
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 16px 20px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      border-radius: 14px;
+      color: white;
+      font-size: 1rem;
+      transition: var(--transition);
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 4px rgba(109, 40, 217, 0.2);
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 40px;
+      right: 40px;
+      background: linear-gradient(135deg, var(--dark-2), var(--dark-3));
+      border-left: 5px solid var(--primary);
+      border-radius: 16px;
+      padding: 20px 25px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+      transform: translateX(150%);
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 1001;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      max-width: 350px;
+    }
+
+    .toast.show {
+      transform: translateX(0);
+    }
+
+    .toast-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .toast-message {
+      font-weight: 500;
+      flex: 1;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      grid-column: 1 / -1;
+    }
+
+    .empty-state i {
+      font-size: 4rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 20px;
+    }
+
+    .empty-state h3 {
+      font-size: 1.6rem;
+      margin-bottom: 10px;
+      color: white;
+    }
+
+    .empty-state p {
+      color: rgba(255, 255, 255, 0.6);
+      max-width: 400px;
+      margin: 0 auto 25px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .list-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .modal-content {
+        padding: 30px 20px;
+      }
+      
+      .toast {
+        bottom: 20px;
+        right: 20px;
+        left: 20px;
+        max-width: none;
+      }
+    }
+
+    /* Hidden file input */
+    #fileInput {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">
+        <div class="logo-icon">
+          <i class="fas fa-phone-alt"></i>
+        </div>
+        <div class="logo-text">
+          <h1>Call Connect</h1>
+          <p>One-click calling, zero distractions</p>
+        </div>
+      </div>
+      
+      <div class="action-buttons">
+        <button class="btn btn-primary" id="addBtn">
+          <i class="fas fa-user-plus"></i> Add Contact
+        </button>
+        <button class="btn btn-secondary" id="importBtn">
+          <i class="fas fa-file-import"></i> Import CSV
+        </button>
+        <button class="btn btn-secondary" id="editBtn" title="Toggle Edit Mode">
+          <i class="fas fa-edit"></i> Edit Mode
+        </button>
+        <button class="btn btn-danger" id="deleteAllBtn" title="Delete All Contacts" style="display: none;">
+          <i class="fas fa-trash-alt"></i> Clear All
+        </button>
+      </div>
+      
+      <div class="stats-badge" id="contactsCount">
+        <i class="fas fa-users"></i>
+        <span id="totalContacts">0</span> contacts ready to call
+      </div>
+    </div>
+
+    <!-- Contact List -->
+    <div class="list-container" id="list">
+      <!-- Contacts will be dynamically inserted here -->
+    </div>
+
+    <!-- Import Area -->
+    <div class="import-area" id="dropArea">
+      <i class="fas fa-cloud-upload-alt"></i>
+      <h3>Drag & Drop Contacts File</h3>
+      <p>Import your contacts from CSV or text files. Only name and phone number columns are needed.</p>
+      <button class="btn btn-secondary" id="browseBtn">
+        <i class="fas fa-folder-open"></i> Choose File
+      </button>
+      <p class="file-types">Supports: CSV, TXT files with name and phone columns</p>
+    </div>
+
+    <!-- Hidden File Input -->
+    <input type="file" id="fileInput" accept=".csv,.txt" />
+  </div>
+
+  <!-- Add Contact Modal -->
+  <div class="modal" id="addModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Add New Contact</h2>
+        <button class="modal-close" id="closeModal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <form id="contactForm">
+        <div class="form-group">
+          <label for="contactName">
+            <i class="fas fa-user"></i> Contact Name *
+          </label>
+          <input type="text" id="contactName" class="form-control" placeholder="John Smith" required>
+        </div>
+        <div class="form-group">
+          <label for="contactPhone">
+            <i class="fas fa-phone"></i> Phone Number *
+          </label>
+          <input type="tel" id="contactPhone" class="form-control" placeholder="+1 (555) 123-4567" required>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Contact</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">
+    <div class="toast-icon">
+      <i class="fas fa-check"></i>
+    </div>
+    <div class="toast-message" id="toastMessage">Operation completed successfully!</div>
+  </div>
+
+  <script>
+    // App State
+    const state = {
+      contacts: JSON.parse(localStorage.getItem("callConnectContacts")) || [],
+      editMode: false
+    };
+
+    // DOM Elements
+    const elements = {
+      list: document.getElementById('list'),
+      editBtn: document.getElementById('editBtn'),
+      addBtn: document.getElementById('addBtn'),
+      importBtn: document.getElementById('importBtn'),
+      browseBtn: document.getElementById('browseBtn'),
+      dropArea: document.getElementById('dropArea'),
+      fileInput: document.getElementById('fileInput'),
+      addModal: document.getElementById('addModal'),
+      closeModal: document.getElementById('closeModal'),
+      cancelBtn: document.getElementById('cancelBtn'),
+      contactForm: document.getElementById('contactForm'),
+      toast: document.getElementById('toast'),
+      toastMessage: document.getElementById('toastMessage'),
+      totalContacts: document.getElementById('totalContacts'),
+      deleteAllBtn: document.getElementById('deleteAllBtn')
+    };
+
+    // Utility Functions
+    const utils = {
+      cleanText: (text) => (text || "").toString().trim(),
+      
+      cleanPhone: (phone) => {
+        const cleaned = utils.cleanText(phone).replace(/[^\d+]/g, "");
+        return cleaned.startsWith('+') ? cleaned : cleaned.replace(/^0+/, '');
+      },
+      
+      formatPhone: (phone) => {
+        const cleaned = phone.replace(/\D/g, '');
+        if (cleaned.length === 10) {
+          return `(${cleaned.substring(0,3)}) ${cleaned.substring(3,6)}-${cleaned.substring(6)}`;
+        }
+        return phone;
+      },
+      
+      showToast: (message, type = "success") => {
+        const icon = elements.toast.querySelector('.toast-icon i');
+        elements.toastMessage.textContent = message;
+        
+        // Set icon and color based on type
+        if (type === "success") {
+          icon.className = "fas fa-check";
+          elements.toast.style.borderLeftColor = "var(--success)";
+        } else if (type === "error") {
+          icon.className = "fas fa-exclamation";
+          elements.toast.style.borderLeftColor = "var(--danger)";
+        } else if (type === "warning") {
+          icon.className = "fas fa-exclamation-triangle";
+          elements.toast.style.borderLeftColor = "var(--warning)";
+        }
+        
+        elements.toast.classList.add('show');
+        setTimeout(() => elements.toast.classList.remove('show'), 3000);
+      },
+      
+      getInitials: (name) => {
+        return name.split(' ')
+          .map(part => part.charAt(0))
+          .join('')
+          .toUpperCase()
+          .substring(0, 2) || '?';
+      },
+      
+      saveToStorage: () => {
+        localStorage.setItem("callConnectContacts", JSON.stringify(state.contacts));
+      },
+      
+      confirmAction: (message) => {
+        return confirm(message);
+      }
+    };
+
+    // Contact Management Functions
+    const contactManager = {
+      addContact: (contact) => {
+        // Check for duplicates
+        const isDuplicate = state.contacts.some(c => 
+          c.phone === contact.phone
+        );
+        
+        if (isDuplicate) {
+          return false;
+        }
+        
+        state.contacts.push(contact);
+        utils.saveToStorage();
+        return true;
+      },
+      
+      removeContact: (index) => {
+        state.contacts.splice(index, 1);
+        utils.saveToStorage();
+        renderContacts();
+      },
+      
+      deleteAllContacts: () => {
+        if (state.contacts.length === 0) {
+          utils.showToast('No contacts to delete', 'warning');
+          return;
+        }
+        
+        if (utils.confirmAction(`Delete all ${state.contacts.length} contacts? This cannot be undone.`)) {
+          state.contacts = [];
+          utils.saveToStorage();
+          renderContacts();
+          utils.showToast('All contacts deleted', 'success');
+        }
+      },
+      
+      importFromCSV: (text) => {
+        const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+        if (lines.length === 0) return 0;
+        
+        const sep = lines[0].includes('\t') ? '\t' : ',';
+        const hasHeader = lines[0].toLowerCase().includes('name') || 
+                         lines[0].toLowerCase().includes('phone');
+        
+        let importedCount = 0;
+        let duplicates = 0;
+        
+        for (let i = hasHeader ? 1 : 0; i < lines.length; i++) {
+          const cols = lines[i].split(sep);
+          if (cols.length < 2) continue;
+          
+          // Try to find name and phone in different column positions
+          const contact = {
+            name: utils.cleanText(cols[0] || ''),
+            phone: utils.cleanPhone(cols[1] || cols[0] || '')
+          };
+          
+          // If first column looks like a phone, swap
+          if (contact.name.match(/[\d+]/) && !contact.phone.match(/[\d+]/)) {
+            const temp = contact.name;
+            contact.name = contact.phone;
+            contact.phone = utils.cleanPhone(temp);
+          }
+          
+          if (!contact.name || !contact.phone) continue;
+          
+          if (contactManager.addContact(contact)) {
+            importedCount++;
+          } else {
+            duplicates++;
+          }
+        }
+        
+        return { importedCount, duplicates };
+      }
+    };
+
+    // UI Rendering Functions
+    const renderContacts = () => {
+      elements.list.innerHTML = '';
+      
+      // Update contacts count
+      elements.totalContacts.textContent = state.contacts.length;
+      
+      // Show/hide delete all button based on contacts
+      elements.deleteAllBtn.style.display = state.contacts.length > 0 ? 'flex' : 'none';
+      
+      if (state.contacts.length === 0) {
+        // Show empty state
+        elements.list.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-address-book"></i>
+            <h3>No Contacts Yet</h3>
+            <p>Add your first contact or import from a CSV file to get started</p>
+            <button class="btn btn-primary" id="addFirstBtn">
+              <i class="fas fa-user-plus"></i> Add First Contact
+            </button>
+          </div>
+        `;
+        
+        document.getElementById('addFirstBtn').addEventListener('click', showModal);
+        return;
+      }
+      
+      state.contacts.forEach((contact, index) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.style.setProperty('--i', index);
+        
+        card.innerHTML = `
+          <div class="contact-header">
+            <div class="contact-avatar">${utils.getInitials(contact.name)}</div>
+            <div class="contact-info">
+              <div class="contact-name">${contact.name}</div>
+              <div class="contact-phone">
+                <i class="fas fa-mobile-alt"></i>
+                ${utils.formatPhone(contact.phone)}
+              </div>
+            </div>
+          </div>
+          <div class="card-actions">
+            ${state.editMode 
+              ? `<button class="btn delete-btn" data-index="${index}">
+                   <i class="fas fa-trash-alt"></i> Delete
+                 </button>
+                 <a class="call-btn" href="tel:${contact.phone}">
+                   <i class="fas fa-phone-alt fa-flip-horizontal"></i> Call Now
+                 </a>`
+              : `<a class="call-btn" href="tel:${contact.phone}">
+                   <i class="fas fa-phone-alt fa-flip-horizontal"></i> Call Now
+                 </a>`
+            }
+          </div>
+        `;
+        
+        elements.list.appendChild(card);
+      });
+      
+      // Add delete button listeners
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const index = parseInt(e.currentTarget.getAttribute('data-index'));
+          contactManager.removeContact(index);
+          utils.showToast('Contact deleted', 'success');
+        });
+      });
+    };
+
+    // Modal Functions
+    const showModal = () => {
+      elements.addModal.classList.add('active');
+      document.getElementById('contactName').focus();
+    };
+
+    const hideModal = () => {
+      elements.addModal.classList.remove('active');
+      elements.contactForm.reset();
+    };
+
+    // File Import Functions
+    const handleFileImport = (file) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = contactManager.importFromCSV(e.target.result);
+        renderContacts();
+        
+        if (result.importedCount > 0) {
+          utils.showToast(`Imported ${result.importedCount} contacts${result.duplicates > 0 ? `, ${result.duplicates} duplicates skipped` : ''}`, 'success');
+        } else if (result.duplicates > 0) {
+          utils.showToast('All contacts already exist in your list', 'warning');
+        } else {
+          utils.showToast('No valid contacts found in the file', 'warning');
+        }
+      };
+      reader.readAsText(file);
+    };
+
+    // Event Listeners
+    const setupEventListeners = () => {
+      // Toggle edit mode
+      elements.editBtn.addEventListener('click', () => {
+        state.editMode = !state.editMode;
+        elements.editBtn.classList.toggle('active', state.editMode);
+        elements.editBtn.innerHTML = state.editMode 
+          ? '<i class="fas fa-check"></i> Done Editing' 
+          : '<i class="fas fa-edit"></i> Edit Mode';
+        renderContacts();
+        utils.showToast(state.editMode ? 'Edit mode enabled' : 'Edit mode disabled', 'info');
+      });
+      
+      // Import button
+      elements.importBtn.addEventListener('click', () => {
+        elements.fileInput.click();
+      });
+      
+      // Browse button
+      elements.browseBtn.addEventListener('click', () => {
+        elements.fileInput.click();
+      });
+      
+      // Delete all button
+      elements.deleteAllBtn.addEventListener('click', () => {
+        contactManager.deleteAllContacts();
+      });
+      
+      // File input change
+      elements.fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+          handleFileImport(e.target.files[0]);
+          e.target.value = '';
+        }
+      });
+      
+      // Drag and drop
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        elements.dropArea.addEventListener(eventName, preventDefaults, false);
+      });
+      
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      
+      ['dragenter', 'dragover'].forEach(eventName => {
+        elements.dropArea.addEventListener(eventName, () => {
+          elements.dropArea.classList.add('drag-over');
+        }, false);
+      });
+      
+      ['dragleave', 'drop'].forEach(eventName => {
+        elements.dropArea.addEventListener(eventName, () => {
+          elements.dropArea.classList.remove('drag-over');
+        }, false);
+      });
+      
+      elements.dropArea.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        
+        if (files.length > 0) {
+          handleFileImport(files[0]);
+        }
+      }, false);
+      
+      // Modal controls
+      elements.addBtn.addEventListener('click', showModal);
+      elements.closeModal.addEventListener('click', hideModal);
+      elements.cancelBtn.addEventListener('click', hideModal);
+      
+      // Add contact form
+      elements.contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const contact = {
+          name: utils.cleanText(document.getElementById('contactName').value),
+          phone: utils.cleanPhone(document.getElementById('contactPhone').value)
+        };
+        
+        if (!contact.name || !contact.phone) {
+          utils.showToast('Name and phone number are required', 'error');
+          return;
+        }
+        
+        if (contact.phone.length < 7) {
+          utils.showToast('Please enter a valid phone number', 'error');
+          return;
+        }
+        
+        if (contactManager.addContact(contact)) {
+          utils.showToast(`${contact.name} added successfully`, 'success');
+          renderContacts();
+          hideModal();
+        } else {
+          utils.showToast('Contact with this phone number already exists', 'warning');
+        }
+      });
+      
+      // Close modal on background click
+      elements.addModal.addEventListener('click', (e) => {
+        if (e.target === elements.addModal) {
+          hideModal();
+        }
+      });
+      
+      // Close modal on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && elements.addModal.classList.contains('active')) {
+          hideModal();
+        }
+      });
+    };
+
+    // Initialize the app
+    const init = () => {
+      setupEventListeners();
+      renderContacts();
+    };
+
+    // Start the app when DOM is loaded
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
