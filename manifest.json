@@ -1,0 +1,22 @@
+{
+  "name": "Call Connect",
+  "short_name": "CallConnect",
+  "description": "One-click calling, zero distractions",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f0f23",
+  "theme_color": "#6d28d9",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
